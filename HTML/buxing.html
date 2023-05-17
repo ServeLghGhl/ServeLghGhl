@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cartoon character animation</title>
+	<style>
+		#cartoon {
+			width: 200px;
+			height: 200px;
+			background-image: url('https://s1.ax1x.com/2023/05/17/p9RTm1U.jpg');
+			background-size: 800px 200px;
+			animation-name: walk;
+			animation-duration: 1s;
+			animation-iteration-count: infinite;
+			animation-timing-function: steps(4);
+		}
+		@keyframes walk {
+			from { background-position: 0 0; }
+			to { background-position: -800px 0; }
+		}
+	</style>
+</head>
+<body>
+	<div id="cartoon"></div>
+</body>
+</html>
