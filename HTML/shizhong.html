@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Clock</title>
+    <style>
+        canvas{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <script>
+        function drawClock() {
+            // 获取 Canvas 元素和绘图上下文
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            // 清空画布
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            // 绘制表盘边框
+            context.beginPath();
+            context.arc(canvas.width / 2, canvas.height / 2, canvas.height / 2 - 10, 0, 2 * Math.PI);
+            context.lineWidth = 10;
+            context.strokeStyle = "black";
+            context.stroke();
+            // 圆的参数
+            var radius = canvas.height / 2 - 20;
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            // 绘制表盘刻度线和圆环
+            for (var i = 0; i < 60; i++) {
+                var angle = (i / 60) * 2 * Math.PI;
+                var x1 = centerX + radius * Math.sin(angle);
+                var y1 = centerY - radius * Math.cos(angle);
+                var x2 = centerX + (i % 5 === 0 ? 0.8 : 0.9) * radius * Math.sin(angle);
+                var y2 = centerY - (i % 5 === 0 ? 0.8 : 0.9) * radius * Math.cos(angle);
+                context.beginPath();
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.lineWidth = i % 5 === 0 ? 3 : 1;
+                context.strokeStyle = "black";
+                context.stroke();
+                if (i % 5 === 0) {
+                    context.beginPath();
+                    context.arc(x2, y2, 5, 0, 2 * Math.PI);
+                    context.fillStyle = "black";
+                    context.fill();
+                }
+            }
+            // 绘制时针
+            var now = new Date();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            hour = hour % 12;  // 小时数不能大于 12
+            hour = hour + minute / 60 + second / 3600;
+            hour = (hour / 12) * 2 * Math.PI;
+            drawHand(context, hour, radius * 0.5, 8);
+            // 绘制分针
+            minute = minute + second / 60;
+            minute = (minute / 60) * 2 * Math.PI;
+            drawHand(context, minute, radius * 0.8, 5);
+            // 绘制秒针
+            second = (second / 60) * 2 * Math.PI;
+            context.beginPath();
+            context.lineWidth = 2;
+            context.lineCap = "round";
+            context.moveTo(canvas.width / 2, canvas.height / 2);
+            context.lineTo(canvas.width / 2 + (radius * 0.9) * Math.sin(second), canvas.height / 2 - (radius * 0.9) * Math.cos(second));
+            context.strokeStyle = "red"; // 将秒针颜色设置为红色
+            context.stroke();
+        }
+        function drawHand(context, position, length, width) {
+            context.beginPath();
+            context.lineWidth = width;
+            context.lineCap = "round";
+            context.moveTo(canvas.width / 2, canvas.height / 2);
+            context.lineTo(canvas.width / 2 + length * Math.sin(position), canvas.height / 2 - length * Math.cos(position));
+            context.strokeStyle = "black";
+            context.stroke();
+        }
+        // 每秒钟绘制一次时钟
+        setInterval(drawClock, 1000);
+    </script>
+</body>
+</html>
